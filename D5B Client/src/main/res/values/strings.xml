@@ -6,5 +6,8 @@
     <string name="searchBtn">Search</string>
     <string name="scan_button">Scan</string>
     <string name="dialog_title">Add drink</string>
+    <string name="title_activity_web_view">WebViewActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

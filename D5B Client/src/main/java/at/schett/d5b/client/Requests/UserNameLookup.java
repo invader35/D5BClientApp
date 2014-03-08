@@ -1,8 +1,11 @@
 package at.schett.d5b.client.Requests;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
@@ -20,25 +23,18 @@ public class UserNameLookup extends SpringAndroidSpiceRequest<String> {
 
     @Override
     public String loadDataFromNetwork() throws Exception {
-        String[] projection = new String[] {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Nickname.DISPLAY_NAME,
-        };
-        Cursor c = parentActivity.getContentResolver().query(ContactsContract.Profile.CONTENT_URI, projection, null, null, null);
-        int count = c.getCount();
-        String userName = "";
-        String[] columnNames = c.getColumnNames();
-        boolean b = c.moveToFirst();
-        int position = c.getPosition();
-        if (count == 1 && position == 0) {
-            for (int j = 0; j < columnNames.length; j++) {
-                String columnValue = c.getString(c.getColumnIndex(columnNames[j]));
-                if (columnNames[j].equals("display_name")) {
-                    userName = columnValue;
-                }
+        try {
+            String userName;
+            Account[] acc = AccountManager.get(parentActivity.getApplicationContext()).getAccountsByType("com.google");
+            if (acc != null && acc[0] != null) {
+                userName = acc[0].name.split("@")[0];
+            } else {
+                userName = "";
             }
-            c.close();
+            return userName;
+        } catch(NullPointerException e) {
+            Log.d("d5b.client", "Null pointer when trying to get the accounts", e);
+            throw e;
         }
-        return userName;
     }
 }

@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.octo.android.robospice.JacksonSpringAndroidSpiceService;
@@ -18,6 +19,8 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import at.schett.d5b.client.Constants.AppConstants;
+import at.schett.d5b.client.Constants.UrlConstants;
 import at.schett.d5b.client.R;
 import at.schett.d5b.client.Requests.SyncRequest;
 import at.schett.d5b.client.Requests.TrackRequest;
@@ -33,9 +36,6 @@ public class MainActivity extends Activity {
     private String lastRequestCacheKey;
 
     private ProductList productList;
-
-    private String userName;
-
     private Intent parentIntent;
 
     @Override
@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
     private void performTrackRequest(Product product) {
         MainActivity.this.setProgressBarIndeterminateVisibility(true);
 
-        TrackRequest request = new TrackRequest(product, userName);
+        TrackRequest request = new TrackRequest(product, AppConstants.UserName);
         lastRequestCacheKey = request.createCacheKey();
 
         spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ONE_MINUTE, new TrackRequestListener());
@@ -80,9 +80,7 @@ public class MainActivity extends Activity {
     }
 
     public void performUserNameLookup() {
-
         UserNameLookup request = new UserNameLookup(this);
-
         spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ONE_MINUTE, new UserNameLookupListener());
     }
 
@@ -102,6 +100,8 @@ public class MainActivity extends Activity {
 
         switch (id) {
             case R.id.action_show_stats:
+                Intent intent = new Intent(this, WebViewActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.action_sync:
                 performSyncRequest();
@@ -199,13 +199,13 @@ public class MainActivity extends Activity {
     private class UserNameLookupListener implements RequestListener<String> {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            userName = "";
+            AppConstants.UserName = "";
             showToast("No user name found...");
         }
 
         @Override
         public void onRequestSuccess(String s) {
-            userName = s.replace(' ', '_');
+            AppConstants.UserName = s.replace(' ', '_');
             //showToast(String.format("Found username %s", userName));
         }
     }
