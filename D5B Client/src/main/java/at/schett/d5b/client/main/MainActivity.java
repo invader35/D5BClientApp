@@ -185,7 +185,7 @@ public class MainActivity extends Activity {
         public void onRequestFailure(SpiceException spiceException) {
             MainActivity.this.setProgressBarIndeterminateVisibility(false);
             productList = null;
-            showToast(String.format("Error during sync..."));
+            showToast(String.format("Error while trying to add drink..."));
             Log.d("RequestFailure", "Error during sync", spiceException);
         }
 

@@ -15,7 +15,7 @@ public class UrlConstants {
     /**
      * Url Format d5b.doebi.at/user/barcode/
      * */
-    public static String addUrl = String.format(baseUrl, "track/%s/%s/");
+    public static String addUrl = String.format(baseUrl, "/track/%s/%s/");
 
     public static String statsUrl = String.format(baseUrl, "/users/%s");
 

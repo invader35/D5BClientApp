@@ -11,7 +11,6 @@ import android.webkit.WebViewClient;
 import at.schett.d5b.client.Constants.AppConstants;
 import at.schett.d5b.client.Constants.UrlConstants;
 import at.schett.d5b.client.R;
-import at.schett.d5b.client.webViewClient.D5BWebViewClient;
 
 public class WebViewActivity extends Activity {
 
@@ -30,7 +29,7 @@ public class WebViewActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.web_view, menu);
         return true;
