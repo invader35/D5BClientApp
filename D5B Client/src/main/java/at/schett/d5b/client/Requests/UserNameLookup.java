@@ -20,7 +20,11 @@ public class UserNameLookup extends SpringAndroidSpiceRequest<String> {
 
     @Override
     public String loadDataFromNetwork() throws Exception {
-        Cursor c = parentActivity.getContentResolver().query(ContactsContract.Profile.CONTENT_URI, null, null, null, null);
+        String[] projection = new String[] {
+                ContactsContract.CommonDataKinds.Email.ADDRESS,
+                ContactsContract.CommonDataKinds.Nickname.DISPLAY_NAME,
+        };
+        Cursor c = parentActivity.getContentResolver().query(ContactsContract.Profile.CONTENT_URI, projection, null, null, null);
         int count = c.getCount();
         String userName = "";
         String[] columnNames = c.getColumnNames();
@@ -28,8 +32,8 @@ public class UserNameLookup extends SpringAndroidSpiceRequest<String> {
         int position = c.getPosition();
         if (count == 1 && position == 0) {
             for (int j = 0; j < columnNames.length; j++) {
+                String columnValue = c.getString(c.getColumnIndex(columnNames[j]));
                 if (columnNames[j].equals("display_name")) {
-                    String columnValue = c.getString(c.getColumnIndex(columnNames[j]));
                     userName = columnValue;
                 }
             }
