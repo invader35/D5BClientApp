@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">D5B Client</string>
+    <string name="action_show_stats">Show stats</string>
+    <string name="searchBtn">Search</string>
+    <string name="scan_button">Scan</string>
+    <string name="dialog_title">Add drink</string>
+
+</resources>
