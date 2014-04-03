@@ -25,4 +25,8 @@ public class Product {
         this.barcode = barcode;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

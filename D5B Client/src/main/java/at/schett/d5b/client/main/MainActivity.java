@@ -11,6 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.octo.android.robospice.JacksonSpringAndroidSpiceService;
@@ -18,6 +21,9 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import at.schett.d5b.client.Constants.AppConstants;
 import at.schett.d5b.client.Constants.UrlConstants;
@@ -74,6 +80,7 @@ public class MainActivity extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         setContentView(R.layout.activity_main);
+
         performSyncRequest();
         performUserNameLookup();
 
@@ -130,22 +137,14 @@ public class MainActivity extends Activity {
                     parentIntent = intent;
                     String barCode = intent.getStringExtra("SCAN_RESULT");
                     Product productToAdd = null;
-                    for(Product product : productList) {
+                    for (Product product : productList) {
                         if (product.getBarcode().equals(barCode)) {
                             productToAdd = product;
                         }
                     }
 
                     if (productToAdd != null) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        String productName = productToAdd.getName();
-                        builder.setMessage(String.format("Do you want to add %s to your drinks?", productName)).setTitle(R.string.dialog_title);
-                        builder.setCancelable(true);
-                        builder.setPositiveButton("Yes, of course", new OkOnClickListener(productToAdd));
-                        builder.setNegativeButton("No, definitely not", new CancelOnClickListener());
-
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                        trackDialog(productToAdd);
                     } else {
                         showToast("Product not found, please try to sync products");
                     }
@@ -155,6 +154,18 @@ public class MainActivity extends Activity {
                 }
                 break;
         }
+    }
+
+    private void trackDialog(Product productToAdd) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String productName = productToAdd.getName();
+        builder.setMessage(String.format("Do you want to add %s to your drinks?", productName)).setTitle(R.string.dialog_title);
+        builder.setCancelable(true);
+        builder.setPositiveButton("Yes, of course", new OkOnClickListener(productToAdd));
+        builder.setNegativeButton("No, definitely not", new CancelOnClickListener());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 
@@ -176,6 +187,7 @@ public class MainActivity extends Activity {
         public void onRequestSuccess(ProductList products) {
             MainActivity.this.setProgressBarIndeterminateVisibility(false);
             productList = products;
+
             showToast(String.format("Synced %d products...", productList.size()));
         }
     }
